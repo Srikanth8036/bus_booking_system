@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #e0f7fa, #fff);
+            min-height: 100vh;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-icon {
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-10">
+        <!-- Book Now Button -->
+        <div class="flex justify-end mb-6">
+            <a href="/booking/" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition duration-300">
+                + Book Now
+            </a>
+            <a href="/customer/logout/" class="bg-yellow-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition duration-300">
+                - Log Out
+            </a>
+        </div>
+
+        <!-- Welcome Title -->
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-10">Welcome to Your Dashboard</h1>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8">
+            <!-- Profile -->
+            <a href="/customer/profile" class="card bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl">
+                <lottie-player class="grid-icon mx-auto" src="https://assets4.lottiefiles.com/packages/lf20_t24tpvcu.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                <h2 class="text-xl font-semibold text-gray-700 mt-4">View Profile</h2>
+                <p class="text-sm text-gray-500">Check your personal info</p>
+            </a>
+
+            <!-- Bookings -->
+            <a href="/customer/my_bookings" class="card bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl">
+                <lottie-player class="grid-icon mx-auto" src="https://assets10.lottiefiles.com/packages/lf20_yr6zz3wv.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                <h2 class="text-xl font-semibold text-gray-700 mt-4">My Bookings</h2>
+                <p class="text-sm text-gray-500">See your past tickets</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

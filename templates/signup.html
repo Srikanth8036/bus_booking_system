@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup - Bus Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body, html { margin: 0; padding: 0; overflow: hidden; height: 100vh; }
+
+    .scene {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #aee1f9; z-index: 0;
+    }
+
+    .sun {
+      position: absolute; top: 40px; left: 50%;
+      transform: translateX(-50%);
+      width: 150px; height: 150px;
+      background: #FFD700; border-radius: 50%;
+      box-shadow: 0 0 60px #ffd700aa;
+    }
+
+    .cloud {
+      position: absolute; top: 80px; left: 50%;
+      width: 120px; height: 60px;
+      background: #fff; border-radius: 60px; opacity: 0.8;
+      animation: floatCloud 8s ease-in-out infinite;
+      transform: translateX(-50%);
+    }
+
+    .cloud::before, .cloud::after {
+      content: ""; position: absolute;
+      background: #fff; border-radius: 50%;
+    }
+
+    .cloud::before { width: 60px; height: 60px; left: -30px; top: 0; }
+    .cloud::after { width: 60px; height: 60px; right: -30px; top: 0; }
+
+    @keyframes floatCloud {
+      0%, 100% { transform: translateX(-50%) translateX(0); }
+      50% { transform: translateX(-50%) translateX(60px); }
+    }
+
+    .trees {
+      position: absolute; bottom: 120px; width: 100%;
+      display: flex; justify-content: space-around;
+    }
+
+    .tree {
+      width: 50px; height: 100px;
+      background: #228B22;
+      border-radius: 25px 25px 0 0;
+    }
+
+    .road {
+      position: absolute; bottom: 0;
+      width: 100%; height: 120px; background: #333;
+    }
+
+    .road::before {
+      content: "";
+      position: absolute;
+      top: 50%; left: 0;
+      width: 100%; height: 8px;
+      background: repeating-linear-gradient(
+        to right,
+        #fff 0, #fff 40px,
+        transparent 40px, transparent 80px
+      );
+      transform: translateY(-50%);
+    }
+
+    .bus {
+      position: absolute; bottom: 130px; left: -200px;
+      width: 150px; height: 70px;
+      background: red; border-radius: 10px;
+      animation: drive 10s linear infinite;
+      box-shadow: 0 5px 0 #000;
+    }
+
+    .bus::before, .bus::after {
+      content: ""; position: absolute; bottom: -15px;
+      width: 30px; height: 30px;
+      background: #000; border-radius: 50%;
+    }
+
+    .bus::before { left: 15px; }
+    .bus::after { right: 15px; }
+
+    @keyframes drive {
+      0% { left: -200px; }
+      100% { left: 110%; }
+    }
+
+    .form-container {
+      position: relative; z-index: 1;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center bg-transparent">
+
+  <!-- Background Scene -->
+  <div class="scene">
+    <div class="sun"></div>
+    <div class="cloud"></div>
+    <div class="trees">
+      <div class="tree"></div>
+      <div class="tree"></div>
+      <div class="tree"></div>
+      <div class="tree"></div>
+    </div>
+    <div class="bus"></div>
+    <div class="road"></div>
+  </div>
+
+  <!-- Signup Form -->
+  <div class="form-container z-10 bg-white p-10 rounded-xl shadow-xl w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Create Account</h2>
+    <form action="/auth/signup_form" method="post" class="space-y-4">
+      {% for field in ['username', 'email', 'phone_number', 'address', 'password'] %}
+        <div>
+          <label class="block text-sm text-gray-600 mb-1 capitalize">{{ field.replace('_', ' ') }}</label>
+          {% if field == 'address' %}
+            <textarea name="{{ field }}" required
+              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring {{ 'border-red-500' if errors.get(field) else 'border-gray-300' }} focus:ring-blue-300">{{ form_data.get(field, '') }}</textarea>
+          {% elif field == 'password' %}
+            <input type="password" name="{{ field }}" required
+              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring {{ 'border-red-500' if errors.get(field) else 'border-gray-300' }} focus:ring-blue-300" />
+          {% else %}
+            <input type="text" name="{{ field }}" value="{{ form_data.get(field, '') }}" required
+              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring {{ 'border-red-500' if errors.get(field) else 'border-gray-300' }} focus:ring-blue-300" />
+          {% endif %}
+          {% if errors.get(field) %}
+            <p class="text-sm text-red-600 mt-1">{{ errors[field] }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="flex items-center">
+        <input id="is_admin" name="is_admin" type="checkbox"
+               class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+        <label for="is_admin" class="ml-2 block text-sm text-gray-700">
+          Register as Admin
+        </label>
+      </div>
+      <button type="submit"
+        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Sign Up</button>
+    </form>
+    <p class="text-sm text-center mt-4 text-gray-600">Already have an account?
+      <a href="/login" class="text-blue-600 hover:underline">Login here</a>
+    </p>
+  </div>
+
+</body>
+</html>

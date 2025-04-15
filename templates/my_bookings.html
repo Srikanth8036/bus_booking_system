@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .back-btn:hover {
+            background-color: #005fa3;
+        }
+        .section {
+            background-color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            margin-bottom: 15px;
+            color: #0077cc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background-color: #0077cc;
+            color: white;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .no-bookings {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Bookings</h1>
+    <div class="container">
+        <a href="/customer/" class="back-btn">← Back to Dashboard</a>
+
+        {% for status, booking_list in bookings.items() %}
+        <div class="section">
+            <h2>{{ status }} Bookings</h2>
+
+            {% if booking_list %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Bus Number</th>
+                        <th>Seat Number</th>
+                        <th>Journey Date</th>
+                        <th>Start Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in booking_list %}
+                    <tr>
+                        <td>{{ b.Source }}</td>
+                        <td>{{ b.Destination }}</td>
+                        <td>{{ b.bus_number }}</td>
+                        <td>{{ b.seat_number }}</td>
+                        <td>{{ b.journey_date }}</td>
+                        <td>{{ b.start_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-bookings">No {{ status.lower() }} bookings found.</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

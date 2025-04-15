@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Places - Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-lg rounded-lg p-10 w-full max-w-xl">
+    <h2 class="text-2xl font-bold text-center text-blue-700 mb-6">Manage Places</h2>
+
+    <!-- Add Place Form -->
+    <form action="/admin/add_place_form" method="post" class="space-y-5 mb-6">
+      <div>
+        <label for="name" class="block text-gray-700 font-semibold mb-1">Place Name</label>
+        <input type="text" id="name" name="name" required
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
+
+      {% if error %}
+        <p class="text-red-500 text-sm">{{ error }}</p>
+      {% endif %}
+
+      <button type="submit"
+              class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+        Add Place
+      </button>
+    </form>
+
+    <!-- Existing Places List -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Existing Places</h3>
+      <ul class="space-y-2">
+        {% for place in places %}
+          <li class="bg-gray-100 p-2 rounded-md border border-gray-300">{{ place.name }}</li>
+        {% else %}
+          <li class="text-gray-500">No places added yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="mt-6 text-center">
+      <a href="/admin/" class="text-blue-600 hover:underline text-sm">← Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>
