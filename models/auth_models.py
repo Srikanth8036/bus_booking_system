@@ -2,7 +2,7 @@ from pydantic import BaseModel,EmailStr,field_validator
 from fastapi import Form
 from database.connection import get_db
 from schemas.schemas import Place
-from datetime import time
+from datetime import time,date
 
 
 class SignupRequest(BaseModel):
@@ -103,5 +103,18 @@ class BusStopForm(BaseModel):
             start_time=start_time_obj,
             end_time=end_time_obj
         )
-
-
+class BookingForm(BaseModel):
+    source_name:str 
+    destination_name:str 
+    travel_date:str 
+    @classmethod
+    def as_form( cls,
+        source_name: str,
+        destination_name : str,  # Assuming place_name is passed as a string
+        travel_date: str):
+        travel_date= date(travel_date)
+        return cls(
+            source_name = source_name,
+            destination_name = destination_name,
+            travel_date = travel_date
+        )

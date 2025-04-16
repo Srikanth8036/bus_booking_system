@@ -1,131 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Book Your Bus</title>
+  <title>NextGen Bus Booking</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
+    /* Gradient Background Animation */
     body {
-      background: linear-gradient(to right, #e0f7fa, #dbeafe);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
+      background: linear-gradient(-45deg, #3b82f6, #9333ea, #06b6d4, #10b981);
+      background-size: 400% 400%;
+      animation: gradientShift 10s ease infinite;
+      font-family: 'Segoe UI', sans-serif;
     }
 
-    .glass-card {
-      backdrop-filter: blur(12px) saturate(180%);
-      -webkit-backdrop-filter: blur(12px) saturate(180%);
-      background-color: rgba(255, 255, 255, 0.7);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
     }
 
-    .custom-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1.5rem;
-      padding-right: 3rem;
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .search-button {
-      background: linear-gradient(to right, #38bdf8, #3b82f6);
+    .animate-fadeUp {
+      animation: fadeUp 0.8s ease-out both;
     }
 
-    .search-button:hover {
-      background: linear-gradient(to right, #0ea5e9, #2563eb);
-      transform: scale(1.02);
+    .glow {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.7), 0 0 30px rgba(59, 130, 246, 0.3);
     }
 
-    .date-input::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      cursor: pointer;
+    .glass {
+      backdrop-filter: blur(12px);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
 
-<body class="flex flex-col items-center pt-10 px-4">
-  <div class="glass-card w-full max-w-4xl p-8 md:p-10">
-    
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold text-sky-700 mb-4 md:mb-0">🚌 Book Your Bus</h1>
-      <a href="/customer/" class="bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-5 rounded-xl transition duration-300">
-        Dashboard
-      </a>
+<body class="min-h-screen flex flex-col items-center px-6 py-12">
+
+  <!-- Container -->
+  <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-6 glass rounded-3xl p-6 shadow-xl animate-fadeUp">
+
+    <!-- Left Panel -->
+    <div class="hidden lg:flex flex-col justify-center items-start text-white p-10 space-y-6">
+      <h1 class="text-5xl font-extrabold leading-tight drop-shadow-md">NextGen<br>Bus Booking</h1>
+      <p class="text-lg font-medium opacity-90">Travel smart, travel in style. 🚀<br>Choose your route, pick your ride, and book in seconds.</p>
+      <img src="https://img.icons8.com/color/96/bus.png" alt="bus" class="w-20 h-20 animate-bounce" />
     </div>
 
-    <!-- Booking Form -->
-    <form method="post" action="/booking/search" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- Source Dropdown -->
-        <div>
-          <label for="source" class="block text-gray-700 font-semibold mb-1">Source</label>
-          <select name="source" id="source" required
-            class="custom-select w-full px-5 py-3 border border-gray-300 rounded-xl bg-white text-gray-800 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
-            {% for place in places %}
-            <option value=" {{place.name}}"> {{place.name}} </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Destination Dropdown -->
-        <div>
-          <label for="destination" class="block text-gray-700 font-semibold mb-1">Destination</label>
-          <select name="destination" id="destination" required
-            class="custom-select w-full px-5 py-3 border border-gray-300 rounded-xl bg-white text-gray-800 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
-            {% for place in places %}
-            <option value=" {{place.name}}"> {{place.name}} </option>
-            {% endfor %}
-          </select>
-        </div>
-
-       <!-- Travel Date -->
-      <div>
-        <label for="travel_date" class="block text-gray-700 font-semibold mb-1">Travel Date</label>
-        <input type="date" id="travel_date" name="travel_date" required
-          onkeydown="return false"
-          class="w-full px-5 py-3 border border-gray-300 rounded-xl bg-white text-gray-800 font-medium shadow-inner focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer hover:shadow-md transition duration-200">
+    <!-- Right Panel (Form) -->
+    <div class="bg-white rounded-2xl p-8 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">📝 Book Your Ride</h2>
+        <a href="/customer/"
+          class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-xl shadow-lg hover:scale-105 transition transform duration-300">Dashboard</a>
       </div>
 
-      <!-- Submit Button -->
-      <div class="mt-8">
+      <form method="post" action="/booking/search" class="space-y-5">
+
+        <!-- Source -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Source</label>
+          <select name="source" required
+            class="w-full px-4 py-3 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-blue-400">
+            {% for place in places %}
+            <option value="{{ place.name }}" {% if place.name == source %}selected{% endif %}>{{ place.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Destination -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Destination</label>
+          <select name="destination" required
+            class="w-full px-4 py-3 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-purple-400">
+            {% for place in places %}
+            <option value="{{ place.name }}" {% if place.name == destination %}selected{% endif %}>{{ place.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Travel Date -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Travel Date</label>
+          <input type="date" name="travel_date" required value="{{ travel_date }}"
+            class="w-full px-4 py-3 border rounded-xl bg-gray-50 shadow-inner focus:ring-2 focus:ring-green-400">
+        </div>
+
+        <!-- Submit -->
         <button type="submit"
-          class="search-button w-full text-white font-semibold text-lg py-3 px-6 rounded-xl shadow-lg transition duration-300">
+          class="w-full py-3 text-white text-lg font-semibold rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-indigo-600 hover:to-purple-500 transform hover:scale-105 transition duration-300 shadow-xl">
           🔍 Search Buses
         </button>
-      </div>
-    </form>
-  </div>
-  {% if buses %}
-  <div class="mt-10">
-    <h2 class="text-2xl font-semibold text-sky-700 mb-4">🚌 Available Buses</h2>
-    <div class="space-y-4">
-      {% for bus in buses %}
-        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-md flex justify-between items-center">
-          <div>
-            <p class="text-lg font-bold text-gray-800">Bus No: {{ bus.bus_number }}</p>
-            <p class="text-sm text-gray-600">From: {{ source }} → To: {{ destination }}</p>
-            <p class="text-sm text-gray-600">Date: {{ travel_date }}</p>
-            <p class="text-sm text-gray-600">Time: {{ bus.time }}</p>
-          </div>
-          <form method="get" action="/customer/select_seat/{{ bus.id }}">
-            <input type="hidden" name="travel_date" value="{{ travel_date }}">
-            <button type="submit" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-xl">
-              🎟️ View Seats
-            </button>
-          </form>
-        </div>
-      {% endfor %}
+      </form>
     </div>
   </div>
-{% endif %}
+
+  <!-- Bus Cards -->
+  {% if buses %}
+  <div class="mt-12 max-w-5xl w-full space-y-4 animate-fadeUp">
+    <h3 class="text-3xl font-bold text-white mb-4">🚌 Available Buses</h3>
+    {% for bus in buses %}
+    <div class="glass px-4 py-3 rounded-xl flex justify-between items-center text-white shadow-md hover:scale-[1.02] transition transform duration-300">
+      <div class="space-y-1 text-sm">
+        <div class="font-bold text-lg">🚌 Bus No: {{ bus[1] }}</div>
+        <div>From <strong>{{ source }}</strong> to <strong>{{ destination }}</strong></div>
+        <div>Date: {{ travel_date }} | Departure: {{ bus[2] }} | Arrival: {{ bus[3] }}</div>
+      </div>
+      <form method="get" action="/customer/select_seat/{{ bus.id }}">
+        <input type="hidden" name="travel_date" value="{{ travel_date }}">
+        <button
+          class="bg-gradient-to-br from-green-400 to-emerald-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:scale-105 transition transform duration-300 shadow-md">
+          🎟️ View Seats
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
 </body>
 </html>
