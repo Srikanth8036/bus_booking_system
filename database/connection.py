@@ -4,6 +4,7 @@ from schemas.schemas import Base
 
 DATABASE_URL = "sqlite:///./bus_booking.db"
 
+
 class Database:
     _instance = None
 

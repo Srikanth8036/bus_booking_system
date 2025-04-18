@@ -16,88 +16,109 @@
 
     @keyframes gradientShift {
       0% {
-        background-position: 0% 50%
+        background-position: 0% 50%;
       }
 
       50% {
-        background-position: 100% 50%
+        background-position: 100% 50%;
       }
 
       100% {
-        background-position: 0% 50%
+        background-position: 0% 50%;
       }
     }
 
-    .glass {
-      backdrop-filter: blur(12px);
-      background-color: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .animate-fadeUp {
-      animation: fadeUp 0.8s ease-out both;
-    }
-
-    @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .seat-box {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
+    .seat-shape {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem 0.75rem 0.25rem 0.25rem;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: all 0.2s;
     }
   </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center px-4 py-10">
 
-  <div class="max-w-4xl w-full space-y-6 animate-fadeUp">
+  <div class="max-w-5xl w-full space-y-6">
 
     <!-- Header -->
     <div class="glass p-6 rounded-3xl shadow-xl text-white flex flex-col md:flex-row justify-between items-center gap-4">
       <div>
-        <h1 class="text-3xl font-bold">🎟️ Seat Availability</h1>
-        <p class="text-sm opacity-90 mt-1">Bus No: <strong>{{ bus.bus_no }}</strong> | Date: <strong>{{ travel_date }}</strong></p>
+        <h1 class="text-3xl font-bold">🚌 Seat Availability</h1>
+        <p class="text-sm opacity-90 mt-1">Bus No: <strong>{{ bus_id }}</strong> | Date: <strong>{{ travel_date }}</strong></p>
       </div>
-      <a href="/booking/search" class="bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition">⬅ Back to Search</a>
+      <a href="/booking/search"
+        class="bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition">⬅ Back
+        to Search</a>
     </div>
 
-    <!-- Seat Grid -->
-    <div class="glass p-6 rounded-3xl shadow-xl text-white">
-      <h2 class="text-xl font-semibold mb-4">Select a Seat:</h2>
-      <form method="post" action="/customer/confirm_booking/{{ bus.id }}">
+    <!-- Legend -->
+    <div class="flex justify-center gap-6 text-white">
+      <div class="flex items-center gap-2">
+        <div class="seat-shape bg-white/20"></div>
+        <span>Available</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="seat-shape bg-green-500"></div>
+        <span>Selected</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="seat-shape bg-red-500"></div>
+        <span>Booked</span>
+      </div>
+    </div>
 
-        <!-- Grid of Seats -->
-        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-4 mb-6">
-          {% for seat in seats %}
-          <label class="relative cursor-pointer">
-            <input type="checkbox" name="seats" value="{{ seat.number }}" class="sr-only peer" {% if seat.booked %}disabled{% endif %}>
-            <div
-              class="seat-box flex items-center justify-center text-sm text-white peer-checked:bg-green-500 peer-disabled:bg-red-500 peer-disabled:cursor-not-allowed peer-checked:ring-2 ring-white bg-gray-200 bg-opacity-20 glass shadow-md hover:scale-105 transition-all duration-200">
-              {{ seat.number }}
-            </div>
-          </label>
-          {% endfor %}
+    <!-- Seat Layout -->
+    <form method="post" action="/booking/confirm_booking/{{ bus_id }}" class="flex justify-center">
+      <div class="flex flex-col gap-4">
+
+        {% for row in range(10) %}
+        <div class="flex items-center gap-8">
+          <!-- Row Number -->
+          <div class="text-white w-6 text-right">{{ row + 1 }}</div>
+
+          <!-- Left side (2 seats) -->
+          <div class="flex gap-2">
+            {% for i in range(2) %}
+            {% set seat_index = row * 5 + i %}
+            <label class="cursor-pointer">
+              <input type="checkbox" name="seats" value="{{ seat_index + 1 }}" class="sr-only peer"
+                {% if seats[seat_index].booked %}disabled{% endif %}>
+              <div
+                class="seat-shape peer-checked:bg-green-500 peer-disabled:bg-red-500 peer-disabled:cursor-not-allowed hover:scale-105">
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+
+          <!-- Space / Aisle -->
+          <div class="w-8"></div>
+
+          <!-- Right side (3 seats) -->
+          <div class="flex gap-2">
+            {% for i in range(2, 5) %}
+            {% set seat_index = row * 5 + i %}
+            <label class="cursor-pointer">
+              <input type="checkbox" name="seats" value="{{ seat_index + 1 }}" class="sr-only peer"
+                {% if seats[seat_index].booked %}disabled{% endif %}>
+              <div
+                class="seat-shape peer-checked:bg-green-500 peer-disabled:bg-red-500 peer-disabled:cursor-not-allowed hover:scale-105  {% if seats[seat_index] %}bg-red-500{% else %}bg-white/20{% endif %}">
+              </div>
+            </label>
+            {% endfor %}
+          </div>
         </div>
+        {% endfor %}
 
         <!-- Confirm Button -->
         <button type="submit"
-          class="w-full py-3 text-white text-lg font-semibold rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition duration-300 shadow-lg">
+          class="mt-8 w-full py-3 text-white text-lg font-semibold rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition duration-300 shadow-lg">
           ✅ Confirm Booking
         </button>
-      </form>
-    </div>
 
+      </div>
+    </form>
   </div>
 
 </body>

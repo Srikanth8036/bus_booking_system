@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Invoice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(-45deg, #7f5af0, #6246ea, #3b82f6, #9333ea);
+      background-size: 400% 400%;
+      animation: gradientShift 10s ease infinite;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-white">
+  <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-2xl w-full max-w-5xl">
+    <h1 class="text-3xl font-bold mb-6 text-center">🧾 Booking Invoice</h1>
+
+    <!-- 🚌 Bus Info -->
+    <div class="bg-white/10 p-4 rounded-xl shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">🚌 Bus Details</h2>
+      <p><strong>Bus ID:</strong> {{ booking_info.bus_id }}</p>
+      <p><strong>Travel Date:</strong> {{ booking_info.travel_date }}</p>
+      <p><strong>From:</strong> {{ booking_info.source_name }}</p>
+      <p><strong>To:</strong> {{ booking_info.destination_name }}</p>
+    </div>
+
+    <!-- 🪑 Passenger + Fare Table -->
+    <div class="overflow-x-auto mb-6">
+      <table class="min-w-full table-auto bg-white/10 text-white rounded-xl overflow-hidden">
+        <thead>
+          <tr class="bg-white/20 text-left">
+            <th class="px-4 py-2">Seat No</th>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Age</th>
+            <th class="px-4 py-2">Gender</th>
+            <th class="px-4 py-2">Fare (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for seat, details in booking_info.passenger_details.items() %}
+          {% set seat_fare = booking_info.fare_per_seat %}
+          <tr class="border-t border-white/20">
+            <td class="px-4 py-2">{{ seat }}</td>
+            <td class="px-4 py-2">{{ details.name }}</td>
+            <td class="px-4 py-2">{{ details.age }}</td>
+            <td class="px-4 py-2">{{ details.Gender }}</td>
+            <td class="px-4 py-2">₹{{ seat_fare }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr class="bg-white/20 font-bold text-lg">
+            <td colspan="4" class="px-4 py-2 text-right">Total Amount:</td>
+            <td class="px-4 py-2">₹{{ booking_info['total_fare'] }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- ✅ Confirm / ❌ Decline -->
+    <div class="flex justify-between">
+      <form action="/booking/finalize_payment" method="post">
+        <button type="submit" class="py-3 px-6 bg-green-600 hover:bg-green-700 rounded-xl font-semibold flex items-center gap-2">
+          <span class="text-white">✅</span> Confirm & Pay
+        </button>
+      </form>
+      <form action="/booking/" method="get">
+        <button type="submit" class="py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-xl font-semibold flex items-center gap-2">
+          <span class="text-white">❌</span> Decline & Rebook
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
