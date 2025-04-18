@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Query
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session, aliased
 from models.auth_models import BookingForm
@@ -8,7 +8,7 @@ from services.auth_service import *
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from services.auth_service import get_current_user
-from schemas.schemas import Place, BusRoute, Bus
+from schemas.schemas import Place, BusRoute, Bus, Booking
 from datetime import date
 
 templates = Jinja2Templates(directory="templates")
@@ -162,5 +162,25 @@ async def finalize_booking(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/finalize_payment", response_class=HTMLResponse)
-def finalize_payment(request: Request, db: Session = Depends(get_db)):
-    pass
+def finalize_payment(request: Request, db: Session = Depends(get_db),user: Session = Depends(get_current_user)):
+    if user:
+        booking_info = request.session.get('booking_info')
+        # print(booking_info)
+        for seat in booking_info['seats']:
+            booking_details = Booking(
+                user_id = user.username,
+                bus_id = booking_info['bus_id'],
+                source_place_id = db.query(Place).filter(Place.name == booking_info['source_name']).with_entities(Place.id).first()[0],
+                destination_place_id = db.query(Place).filter(Place.name == booking_info['destination_name']).with_entities(Place.id).first()[0],
+                seat_number = seat,
+                price = int(booking_info['fare_per_seat']),
+                journey_date = datetime.strptime(booking_info['travel_date'], '%Y-%m-%d') ,
+                passenger_name = booking_info['passenger_details'][seat]['name'],
+                passenger_age = booking_info['passenger_details'][seat]['age'],
+                passenger_gender = booking_info['passenger_details'][seat]['Gender']
+            )
+            print(booking_details.__dict__)
+            db.add(booking_details)
+        db.commit() 
+        return RedirectResponse('/booking/',status_code=302)
+    return RedirectResponse('/auth/login',status_code=302)
