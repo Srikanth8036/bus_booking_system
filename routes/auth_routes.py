@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from models.auth_models import (
-    SignupRequest,
-    LoginRequest,
-    TokenResponse,
     LoginForm,
     SignupForm,
 )

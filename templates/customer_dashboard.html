@@ -2,173 +2,134 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Customer Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>Customer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #2D7EAC, #A3B6D9);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-            overflow: hidden;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
 
-        .scene {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #87CEFA, #aee1f9);
-            z-index: 0;
-            overflow: hidden;
-        }
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #87CEFA, #aee1f9);
+      animation: bgFloat 20s ease-in-out infinite;
+      z-index: -2;
+    }
 
-        .sun {
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 150px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.6);
-        }
+    @keyframes bgFloat {
+      0% {
+        background-position: 0% 50%;
+      }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+      50% {
+        background-position: 100% 50%;
+      }
 
-        .glass:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.2);
-        }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
 
-        .card {
-            display: block;
-            padding: 20px;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    .sun {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      background: #FFD700;
+      border-radius: 50%;
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.6);
+      z-index: -1;
+      animation: pulse 4s ease-in-out infinite;
+    }
 
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
+    @keyframes pulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+      }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
+      50% {
+        transform: translateX(-50%) scale(1.05);
+      }
+    }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 600;
-            color: #2C3E50;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease-in-out;
+    }
 
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
+    .glass:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    }
 
-        .button-container a {
-            padding: 12px 24px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            background-color: #3498db;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.3s ease;
-        }
-
-        .button-container a:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
-
-        .grid-icon {
-            height: 80px;
-            margin-bottom: 15px;
-        }
-
-        .content-container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 50px 30px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(15px);
-        }
-    </style>
+    .text-glow {
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      color: #2C3E50;
+    }
+  </style>
 </head>
 
-<body>
+<body class="text-white">
 
-    <!-- Background Scene -->
-    <div class="scene">
-        <div class="sun"></div>
+  <!-- Animated Sky Background -->
+  <div class="scene">
+    <div class="sun"></div>
+  </div>
+
+  <!-- Dashboard Container -->
+  <div class="w-full max-w-6xl mx-auto px-6 py-12">
+    <div class="glass p-10 rounded-3xl shadow-2xl">
+      <h1 class="text-4xl font-bold text-center mb-10 text-glow">☀️ Welcome to Your Dashboard</h1>
+
+      <!-- Buttons -->
+      <div class="flex justify-between mb-10">
+        <a href="/booking/" class="py-3 px-6 bg-green-500 hover:bg-green-600 rounded-xl font-semibold text-white">+ Book Now</a>
+        <a href="/customer/logout/" class="py-3 px-6 bg-red-500 hover:bg-red-600 rounded-xl font-semibold text-white">- Log Out</a>
+      </div>
+
+      <!-- Grid Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Profile -->
+        <a href="/customer/profile" class="p-6 text-center glass">
+          <lottie-player class="mx-auto h-32" src="https://assets4.lottiefiles.com/packages/lf20_t24tpvcu.json" background="transparent" speed="1" loop autoplay></lottie-player>
+          <h2 class="text-2xl font-semibold mt-4 text-gray-800">View Profile</h2>
+          <p class="text-sm text-gray-600">Check your personal info</p>
+        </a>
+
+        <!-- Bookings -->
+        <a href="/customer/my_bookings" class="p-6 text-center glass">
+          <lottie-player class="mx-auto h-32" src="https://assets10.lottiefiles.com/packages/lf20_yr6zz3wv.json" background="transparent" speed="1" loop autoplay></lottie-player>
+          <h2 class="text-2xl font-semibold mt-4 text-gray-800">My Bookings</h2>
+          <p class="text-sm text-gray-600">See your past tickets</p>
+        </a>
+      </div>
     </div>
-
-    <!-- Dashboard Content -->
-    <div class="container mx-auto px-4 py-10">
-        <div class="content-container">
-            <!-- Welcome and Buttons -->
-            <h1>Welcome to Your Dashboard</h1>
-
-            <div class="button-container">
-                <a href="/booking/" class="hover-button">+ Book Now</a>
-                <a href="/customer/logout/" class="hover-button">- Log Out</a>
-            </div>
-
-            <!-- Dashboard Grid -->
-            <div class="grid-container">
-                <!-- Profile Card -->
-                <a href="/customer/profile" class="card glass">
-                    <lottie-player class="grid-icon mx-auto" src="https://assets4.lottiefiles.com/packages/lf20_t24tpvcu.json"
-                        background="transparent" speed="1" loop autoplay></lottie-player>
-                    <h2 class="text-xl font-semibold text-gray-800 mt-4">View Profile</h2>
-                    <p class="text-sm text-gray-600">Check your personal info</p>
-                </a>
-
-                <!-- Bookings Card -->
-                <a href="/customer/my_bookings" class="card glass">
-                    <lottie-player class="grid-icon mx-auto" src="https://assets10.lottiefiles.com/packages/lf20_yr6zz3wv.json"
-                        background="transparent" speed="1" loop autoplay></lottie-player>
-                    <h2 class="text-xl font-semibold text-gray-800 mt-4">My Bookings</h2>
-                    <p class="text-sm text-gray-600">See your past tickets</p>
-                </a>
-            </div>
-        </div>
-    </div>
+  </div>
 
 </body>
 

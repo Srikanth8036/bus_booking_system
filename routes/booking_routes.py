@@ -91,16 +91,21 @@ async def seat_availability(
     if user:
         form_data = await request.form()
         print(form_data)
-        bus_id = form_data.get('bus_id')
+        bus_id = form_data.get("bus_id")
         travel_date = form_data.get("travel_date")
-        booking_info = request.session.get('booking_info')
-        booking_info['bus_id'] = db.query(Bus).filter(Bus.id == bus_id).with_entities(Bus.bus_number).first()[0] 
-        request.session['booking_info'] = booking_info
+        booking_info = request.session.get("booking_info")
+        booking_info["bus_id"] = (
+            db.query(Bus)
+            .filter(Bus.id == bus_id)
+            .with_entities(Bus.bus_number)
+            .first()[0]
+        )
+        request.session["booking_info"] = booking_info
         return templates.TemplateResponse(
             "seat_availability.html",
             {
                 "request": request,
-                "bus_id": booking_info['bus_id'],
+                "bus_id": booking_info["bus_id"],
                 "travel_date": travel_date,
                 "seats": [False] * 50,
             },
@@ -130,20 +135,32 @@ async def finalize_booking(request: Request, db: Session = Depends(get_db)):
     for num in booking_info["seats"]:
         passenger_details[num] = {x: form.get(f"{x}_{num}") for x in details}
     booking_info["passenger_details"] = passenger_details
-    source_order = db.query(BusRoute).join(Place,Place.id == BusRoute.place_id)\
-    .filter(Place.name == booking_info['source_name']).with_entities(BusRoute.stop_order).first()
-    dest_order = db.query(BusRoute).join(Place,Place.id == BusRoute.place_id)\
-    .filter(Place.name == booking_info['destination_name']).with_entities(BusRoute.stop_order).first() 
-    trip = (source_order[0] - dest_order[0]) + 1 
-    fare_per_seat = 500 * trip 
-    print(fare_per_seat * len(booking_info['seats']))
-    total_fare = fare_per_seat * len(booking_info['seats'])
-    booking_info['fare_per_seat'] = fare_per_seat 
-    booking_info['total_fare'] = total_fare
+    source_order = (
+        db.query(BusRoute)
+        .join(Place, Place.id == BusRoute.place_id)
+        .filter(Place.name == booking_info["source_name"])
+        .with_entities(BusRoute.stop_order)
+        .first()
+    )
+    dest_order = (
+        db.query(BusRoute)
+        .join(Place, Place.id == BusRoute.place_id)
+        .filter(Place.name == booking_info["destination_name"])
+        .with_entities(BusRoute.stop_order)
+        .first()
+    )
+    trip = (source_order[0] - dest_order[0]) + 1
+    fare_per_seat = 500 * trip
+    print(fare_per_seat * len(booking_info["seats"]))
+    total_fare = fare_per_seat * len(booking_info["seats"])
+    booking_info["fare_per_seat"] = fare_per_seat
+    booking_info["total_fare"] = total_fare
     print(booking_info)
-    return templates.TemplateResponse('confirmation_page.html',
-            {'request':request,'booking_info':booking_info})
+    return templates.TemplateResponse(
+        "confirmation_page.html", {"request": request, "booking_info": booking_info}
+    )
 
-@router.post('/finalize_payment',response_class=HTMLResponse)
-def finalize_payment(request:Request,db:Session = Depends(get_db)):
-    pass 
+
+@router.post("/finalize_payment", response_class=HTMLResponse)
+def finalize_payment(request: Request, db: Session = Depends(get_db)):
+    pass
