@@ -44,6 +44,8 @@ async def my_bookings(
 
     now = datetime.now()
     dest = aliased(Place)
+    print(db.query(Booking.user_id,Booking.bus_id).all())
+    print(db.query(Bus.bus_name).all())
     bookings = (
         db.query(
             Booking.journey_date,
@@ -58,13 +60,13 @@ async def my_bookings(
             dest.name.label("Destination_name"),
             BusRoute.start_time.label("start_time"),
         )
-        .join(Bus, Booking.bus_id == Bus.id)
+        .join(Bus, Booking.bus_id == Bus.bus_name)
         .join(Place, Booking.source_place_id == Place.id)
         .join(dest, Booking.destination_place_id == dest.id)
         .join(
             BusRoute,
             and_(
-                BusRoute.bus_id == Booking.bus_id,
+                BusRoute.bus_id == Bus.id,
                 BusRoute.place_id == Booking.source_place_id,
             ),
         )
@@ -73,6 +75,7 @@ async def my_bookings(
         .all()
     )
     grouped = {"Upcoming": [], "Completed": []}
+    print(bookings)
     for b in bookings:
         grouped[b.status].append(
             {

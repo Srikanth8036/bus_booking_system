@@ -124,9 +124,11 @@
     {% for bus in buses %}
     <div class="glass px-4 py-3 rounded-xl flex justify-between items-center text-white shadow-md hover:scale-[1.02] transition transform duration-300">
       <div class="space-y-1 text-sm">
-        <div class="font-bold text-lg">🚌 Bus No: {{ bus[1]}} -- {{ bus[0] }}</div>
+        <div class="font-bold text-lg">🚌 Bus No: {{ bus[1] }}</div>
         <div>From <strong>{{ source }}</strong> to <strong>{{ destination }}</strong></div>
-        <div>Date: {{ travel_date }} | Departure: {{ bus[2] }} | Arrival: {{ bus[3] }}</div>
+        <div>Date: {{ travel_date }}</div>
+        <div>⏰ Departure: {{ bus[2] }} | 🛬 Arrival: {{ bus[3] }}</div>
+        <div>💺 Available Seats: <strong>{{seats_booked[bus[1]]}}</strong></div>
       </div>
       <form method="post" action="/booking/select_seat">
         <input type="hidden" name="travel_date" value="{{ travel_date }}">

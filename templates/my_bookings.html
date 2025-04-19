@@ -1,114 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>My Bookings</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            color: #333;
-        }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            padding: 20px;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: #0077cc;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background-color 0.2s ease-in-out;
-        }
-        .back-btn:hover {
-            background-color: #005fa3;
-        }
-        .section {
-            background-color: white;
-            margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .section h2 {
-            margin-bottom: 15px;
-            color: #0077cc;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        thead {
-            background-color: #0077cc;
-            color: white;
-        }
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .no-bookings {
-            text-align: center;
-            color: #666;
-            font-size: 16px;
-            padding: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>My Bookings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #87CEFA, #aee1f9);
+      background-size: 400% 400%;
+      animation: bgFloat 20s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    @keyframes bgFloat {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .glass:hover {
+      transform: scale(1.01);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .text-glow {
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      color: #2C3E50;
+    }
+  </style>
 </head>
-<body>
 
-    <h1>My Bookings</h1>
-    <div class="container">
-        <a href="/customer/" class="back-btn">← Back to Dashboard</a>
+<body class="text-white">
 
-        {% for status, booking_list in bookings.items() %}
-        <div class="section">
-            <h2>{{ status }} Bookings</h2>
+  <!-- Animated Gradient Background -->
+  <div class="scene"></div>
 
-            {% if booking_list %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Source</th>
-                        <th>Destination</th>
-                        <th>Bus Number</th>
-                        <th>Seat Number</th>
-                        <th>Journey Date</th>
-                        <th>Start Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for b in booking_list %}
-                    <tr>
-                        <td>{{ b.Source }}</td>
-                        <td>{{ b.Destination }}</td>
-                        <td>{{ b.bus_number }}</td>
-                        <td>{{ b.seat_number }}</td>
-                        <td>{{ b.journey_date }}</td>
-                        <td>{{ b.start_time }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div class="no-bookings">No {{ status.lower() }} bookings found.</div>
-            {% endif %}
+  <div class="w-full max-w-6xl mx-auto px-6 py-12">
+    <div class="glass p-10 rounded-3xl shadow-2xl">
+      <h1 class="text-4xl font-bold text-center mb-10 text-glow">🧾 My Bookings</h1>
+
+      <!-- Back Button -->
+      <div class="mb-6">
+        <a href="/customer/" class="inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">← Back to Dashboard</a>
+      </div>
+
+      {% for status, booking_list in bookings.items() %}
+      <div class="glass mb-10 p-6 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4 text-blue-800">{{ status }} Bookings</h2>
+
+        {% if booking_list %}
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse rounded-xl overflow-hidden">
+            <thead class="bg-blue-600 text-white">
+              <tr>
+                <th class="px-4 py-3">Source</th>
+                <th class="px-4 py-3">Destination</th>
+                <th class="px-4 py-3">Bus Number</th>
+                <th class="px-4 py-3">Seat Number</th>
+                <th class="px-4 py-3">Journey Date</th>
+                <th class="px-4 py-3">Start Time</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white text-gray-800">
+              {% for b in booking_list %}
+              <tr class="odd:bg-gray-100 even:bg-white text-center">
+                <td class="px-4 py-2">{{ b.Source }}</td>
+                <td class="px-4 py-2">{{ b.Destination }}</td>
+                <td class="px-4 py-2">{{ b.bus_number }}</td>
+                <td class="px-4 py-2">{{ b.seat_number }}</td>
+                <td class="px-4 py-2">{{ b.journey_date }}</td>
+                <td class="px-4 py-2">{{ b.start_time }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-        {% endfor %}
-
+        {% else %}
+        <p class="text-center text-gray-600 py-4">No {{ status.lower() }} bookings found.</p>
+        {% endif %}
+      </div>
+      {% endfor %}
     </div>
+  </div>
 
 </body>
+
 </html>
